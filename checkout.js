@@ -1,1091 +1,697 @@
 "use strict";
-function _toArray(t) {
-    return _arrayWithHoles(t) || _iterableToArray(t) || _nonIterableRest();
-}
 
-function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance");
-}
-
-function _iterableToArray(t) {
-    if (Symbol.iterator in Object(t) || "[object Arguments]" === Object.prototype.toString.call(t)) return Array.from(t);
-}
-
-function _arrayWithHoles(t) {
-    if (Array.isArray(t)) return t;
-}
-
-function _typeof(t) {
-    return (_typeof =
-        "function" == typeof Symbol && "symbol" == typeof Symbol.iterator
-            ? function (t) {
-                  return typeof t;
-              }
-            : function (t) {
-                  return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : typeof t;
-              })(t);
-}
-
-(Element.prototype.remove = function () {
+//.remove polyfill
+Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
-}),
-    (NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
-        for (var t = this.length - 1; t >= 0; t--) this[t] && this[t].parentElement && this[t].parentElement.removeChild(this[t]);
-    }),
-    "document" in self &&
-        (("classList" in document.createElement("_") && (!document.createElementNS || "classList" in document.createElementNS("http://www.w3.org/2000/svg", "g"))) ||
-            !(function (t) {
-                if ("Element" in t) {
-                    var e = "classList",
-                        n = "prototype",
-                        r = t.Element[n],
-                        o = Object,
-                        i =
-                            String[n].trim ||
-                            function () {
-                                return this.replace(/^\s+|\s+$/g, "");
-                            },
-                        a =
-                            Array[n].indexOf ||
-                            function (t) {
-                                for (var e = 0, n = this.length; n > e; e++) if (e in this && this[e] === t) return e;
-                                return -1;
-                            },
-                        s = function (t, e) {
-                            (this.name = t), (this.code = DOMException[t]), (this.message = e);
-                        },
-                        c = function (t, e) {
-                            if ("" === e) throw new s("SYNTAX_ERR", "The token must not be empty.");
-                            if (/\s/.test(e)) throw new s("INVALID_CHARACTER_ERR", "The token must not contain space characters.");
-                            return a.call(t, e);
-                        },
-                        u = function (t) {
-                            for (var e = i.call(t.getAttribute("class") || ""), n = e ? e.split(/\s+/) : [], r = 0, o = n.length; o > r; r++) this.push(n[r]);
-                            this._updateClassName = function () {
-                                t.setAttribute("class", this.toString());
-                            };
-                        },
-                        l = (u[n] = []),
-                        d = function () {
-                            return new u(this);
-                        };
-                    if (
-                        ((s[n] = Error[n]),
-                        (l.item = function (t) {
-                            return this[t] || null;
-                        }),
-                        (l.contains = function (t) {
-                            return ~c(this, t + "");
-                        }),
-                        (l.add = function () {
-                            var t,
-                                e = arguments,
-                                n = 0,
-                                r = e.length,
-                                o = !1;
-                            do (t = e[n] + ""), ~c(this, t) || (this.push(t), (o = !0));
-                            while (++n < r);
-                            o && this._updateClassName();
-                        }),
-                        (l.remove = function () {
-                            var t,
-                                e,
-                                n = arguments,
-                                r = 0,
-                                o = n.length,
-                                i = !1;
-                            do for (t = n[r] + "", e = c(this, t); ~e; ) this.splice(e, 1), (i = !0), (e = c(this, t));
-                            while (++r < o);
-                            i && this._updateClassName();
-                        }),
-                        (l.toggle = function (t, e) {
-                            var n = this.contains(t),
-                                r = n ? e !== !0 && "remove" : e !== !1 && "add";
-                            return r && this[r](t), e === !0 || e === !1 ? e : !n;
-                        }),
-                        (l.replace = function (t, e) {
-                            var n = c(t + "");
-                            ~n && (this.splice(n, 1, e), this._updateClassName());
-                        }),
-                        (l.toString = function () {
-                            return this.join(" ");
-                        }),
-                        o.defineProperty)
-                    ) {
-                        var f = { get: d, enumerable: !0, configurable: !0 };
-                        try {
-                            o.defineProperty(r, e, f);
-                        } catch (p) {
-                            (void 0 !== p.number && -2146823252 !== p.number) || ((f.enumerable = !1), o.defineProperty(r, e, f));
-                        }
-                    } else o[n].__defineGetter__ && r.__defineGetter__(e, d);
-                }
-            })(self),
-        (function () {
-            var t = document.createElement("_");
-            if ((t.classList.add("c1", "c2"), !t.classList.contains("c2"))) {
-                var e = function r(t) {
-                    var r = DOMTokenList.prototype[t];
-                    DOMTokenList.prototype[t] = function (t) {
-                        var e,
-                            n = arguments.length;
-                        for (e = 0; n > e; e++) (t = arguments[e]), r.call(this, t);
-                    };
-                };
-                e("add"), e("remove");
+}
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = this.length - 1; i >= 0; i--) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
+}
+// classlist polyfill
+/*! @source http://purl.eligrey.com/github/classList.js/blob/master/classList.js */
+"document"in self&&("classList"in document.createElement("_")&&(!document.createElementNS||"classList"in document.createElementNS("http://www.w3.org/2000/svg","g"))||!function(t){"use strict";if("Element"in t){var e="classList",n="prototype",i=t.Element[n],s=Object,r=String[n].trim||function(){return this.replace(/^\s+|\s+$/g,"")},o=Array[n].indexOf||function(t){for(var e=0,n=this.length;n>e;e++)if(e in this&&this[e]===t)return e;return-1},c=function(t,e){this.name=t,this.code=DOMException[t],this.message=e},a=function(t,e){if(""===e)throw new c("SYNTAX_ERR","The token must not be empty.");if(/\s/.test(e))throw new c("INVALID_CHARACTER_ERR","The token must not contain space characters.");return o.call(t,e)},l=function(t){for(var e=r.call(t.getAttribute("class")||""),n=e?e.split(/\s+/):[],i=0,s=n.length;s>i;i++)this.push(n[i]);this._updateClassName=function(){t.setAttribute("class",this.toString())}},u=l[n]=[],h=function(){return new l(this)};if(c[n]=Error[n],u.item=function(t){return this[t]||null},u.contains=function(t){return~a(this,t+"")},u.add=function(){var t,e=arguments,n=0,i=e.length,s=!1;do t=e[n]+"",~a(this,t)||(this.push(t),s=!0);while(++n<i);s&&this._updateClassName()},u.remove=function(){var t,e,n=arguments,i=0,s=n.length,r=!1;do for(t=n[i]+"",e=a(this,t);~e;)this.splice(e,1),r=!0,e=a(this,t);while(++i<s);r&&this._updateClassName()},u.toggle=function(t,e){var n=this.contains(t),i=n?e!==!0&&"remove":e!==!1&&"add";return i&&this[i](t),e===!0||e===!1?e:!n},u.replace=function(t,e){var n=a(t+"");~n&&(this.splice(n,1,e),this._updateClassName())},u.toString=function(){return this.join(" ")},s.defineProperty){var f={get:h,enumerable:!0,configurable:!0};try{s.defineProperty(i,e,f)}catch(p){void 0!==p.number&&-2146823252!==p.number||(f.enumerable=!1,s.defineProperty(i,e,f))}}else s[n].__defineGetter__&&i.__defineGetter__(e,h)}}(self),function(){"use strict";var t=document.createElement("_");if(t.classList.add("c1","c2"),!t.classList.contains("c2")){var e=function(t){var e=DOMTokenList.prototype[t];DOMTokenList.prototype[t]=function(t){var n,i=arguments.length;for(n=0;i>n;n++)t=arguments[n],e.call(this,t)}};e("add"),e("remove")}if(t.classList.toggle("c3",!1),t.classList.contains("c3")){var n=DOMTokenList.prototype.toggle;DOMTokenList.prototype.toggle=function(t,e){return 1 in arguments&&!this.contains(t)==!e?e:n.call(this,t)}}"replace"in document.createElement("_").classList||(DOMTokenList.prototype.replace=function(t,e){var n=this.toString().split(" "),i=n.indexOf(t+"");~i&&(n=n.slice(i),this.remove.apply(this,n),this.add(e),this.add.apply(this,n.slice(1)))}),t=null}());
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+
+
+//'use strict';
+(function(window) {
+    var globalConfigData;
+    var globalChargeData;
+    var globalMeta;
+    var globalSubaccounts;
+    var globalTheme;
+    var globalClosePopup;
+    var globalButtonClicked;
+    var globalIsHostedPage;
+    var afterCallbackRedirectTimeout;
+    var modaliframe;
+    var API_URL;
+    var localData;
+    var loadState = 'none';
+    var iframeAlreadyShown = false;
+    var hideIframe = false;
+    var deferredShowIframe = function (){};
+    var showSpinner = null;
+    var modalframesource = ''
+    var originsource = ''
+    var readyToReceive = false;
+
+    var w = window;
+
+    function closePopup(fromCloseMethod, cancelled) {
+        readyToReceive = false;
+        if (fromCloseMethod === false && globalConfigData && globalConfigData.onclose) {
+            globalConfigData.onclose(cancelled === true);
+        }
+        hideIframe();
+    }
+
+    globalClosePopup = closePopup;
+
+    //message handlers
+    var message_handlers = {};
+
+    message_handlers.txfailed = function (d) {
+        readyToReceive = false;
+
+        setTimeout(function() {
+            hideIframe();
+            if (globalConfigData && globalConfigData.onTransactionFailed) {
+                globalConfigData.onTransactionFailed(d.data);
             }
-            if ((t.classList.toggle("c3", !1), t.classList.contains("c3"))) {
-                var n = DOMTokenList.prototype.toggle;
-                DOMTokenList.prototype.toggle = function (t, e) {
-                    return 1 in arguments && !this.contains(t) == !e ? e : n.call(this, t);
-                };
-            }
-            "replace" in document.createElement("_").classList ||
-                (DOMTokenList.prototype.replace = function (t, e) {
-                    var n = this.toString().split(" "),
-                        r = n.indexOf(t + "");
-                    ~r && ((n = n.slice(r)), this.remove.apply(this, n), this.add(e), this.add.apply(this, n.slice(1)));
-                }),
-                (t = null);
-        })()),
-    !(function (t, e) {
-        "object" == ("undefined" == typeof exports ? "undefined" : _typeof(exports)) && "undefined" != typeof module ? e() : "function" == typeof define && define.amd ? define(e) : e();
-    })(0, function () {
-        function t(t) {
-            var e = this.constructor;
-            return this.then(
-                function (n) {
-                    return e.resolve(t()).then(function () {
-                        return n;
-                    });
-                },
-                function (n) {
-                    return e.resolve(t()).then(function () {
-                        return e.reject(n);
-                    });
-                }
-            );
-        }
-        function e() {}
-        function n(t) {
-            if (!(this instanceof n)) throw new TypeError("Promises must be constructed via new");
-            if ("function" != typeof t) throw new TypeError("not a function");
-            (this._state = 0), (this._handled = !1), (this._value = void 0), (this._deferreds = []), s(t, this);
-        }
-        function r(t, e) {
-            for (; 3 === t._state; ) t = t._value;
-            0 !== t._state
-                ? ((t._handled = !0),
-                  n._immediateFn(function () {
-                      var n = 1 === t._state ? e.onFulfilled : e.onRejected;
-                      if (null !== n) {
-                          var r;
-                          try {
-                              r = n(t._value);
-                          } catch (a) {
-                              return void i(e.promise, a);
-                          }
-                          o(e.promise, r);
-                      } else (1 === t._state ? o : i)(e.promise, t._value);
-                  }))
-                : t._deferreds.push(e);
-        }
-        function o(t, e) {
+        }, 15 * 1000);
+    };
+
+    message_handlers.cannotloadiframe = function (d) {
+        readyToReceive = false;
+        var data = JSON.parse(JSON.stringify(globalChargeData));
+        document.location = modalframesource.src + generateQueryString(data) || document.location;
+    };
+
+    message_handlers.readytorecieve = function(d) {
+        readyToReceive = true;
+        originsource = d.origin
+        d.source.postMessage(
+            {
+                name: "updategotten",
+                meta: globalMeta,
+                subaccounts: globalSubaccounts,
+                theme: globalTheme
+            },
+            d.origin
+        );
+    };
+
+    message_handlers.switch_hosted_pay = function (d) {
+        window.open(d.data.link, '_blank');
+    };
+
+    var loadtimeout_settimeouthandler;
+
+    function handleLoadTimeout(timeout_callback, wait) {
+        loadtimeout_settimeouthandler = setTimeout(function () {
+            closePopup();
             try {
-                if (e === t) throw new TypeError("A promise cannot be resolved with itself.");
-                if (e && ("object" == _typeof(e) || "function" == typeof e)) {
-                    var r = e.then;
-                    if (e instanceof n) return (t._state = 3), (t._value = e), void a(t);
-                    if ("function" == typeof r)
-                        return void s(
-                            (function (t, e) {
-                                return function () {
-                                    t.apply(e, arguments);
-                                };
-                            })(r, e),
-                            t
-                        );
-                }
-                (t._state = 1), (t._value = e), a(t);
-            } catch (o) {
-                i(t, o);
-            }
+                timeout_callback();
+            } catch (e) {}
+        }, wait);
+    }
+
+    message_handlers.allcontentloaded = function(d) {
+        //clearTimeout for waiting
+        clearTimeout(loadtimeout_settimeouthandler);
+        loadState = "loaded";
+        if(!iframeAlreadyShown){
+            deferredShowIframe();
         }
-        function i(t, e) {
-            (t._state = 2), (t._value = e), a(t);
+
+        d.source.postMessage(
+            {
+                name: "clickreport",
+                time: globalButtonClicked
+            },
+            d.origin
+        );
+
+        //document.body.removeChild( document.getElementsByClassName('spinner-container')[0]);
+
+        if(showSpinner){
+            document.getElementById('rve_spinner_container_0999') && document.body.removeChild( document.getElementById('rve_spinner_container_0999') );
         }
-        function a(t) {
-            2 === t._state &&
-                0 === t._deferreds.length &&
-                n._immediateFn(function () {
-                    t._handled || n._unhandledRejectionFn(t._value);
-                });
-            for (var e = 0, o = t._deferreds.length; o > e; e++) r(t, t._deferreds[e]);
-            t._deferreds = null;
+
+        if (globalConfigData && globalConfigData.onopen) {
+            globalConfigData.onopen();
         }
-        function s(t, e) {
-            var n = !1;
-            try {
-                t(
-                    function (t) {
-                        n || ((n = !0), o(e, t));
-                    },
-                    function (t) {
-                        n || ((n = !0), i(e, t));
-                    }
-                );
-            } catch (r) {
-                if (n) return;
-                (n = !0), i(e, r);
-            }
-        }
-        var c = setTimeout;
-        (n.prototype["catch"] = function (t) {
-            return this.then(null, t);
-        }),
-            (n.prototype.then = function (t, n) {
-                var o = new this.constructor(e);
-                return (
-                    r(
-                        this,
-                        new (function (t, e, n) {
-                            (this.onFulfilled = "function" == typeof t ? t : null), (this.onRejected = "function" == typeof e ? e : null), (this.promise = n);
-                        })(t, n, o)
-                    ),
-                    o
-                );
-            }),
-            (n.prototype["finally"] = t),
-            (n.all = function (t) {
-                return new n(function (e, n) {
-                    function r(t, a) {
-                        try {
-                            if (a && ("object" == _typeof(a) || "function" == typeof a)) {
-                                var s = a.then;
-                                if ("function" == typeof s)
-                                    return void s.call(
-                                        a,
-                                        function (e) {
-                                            r(t, e);
-                                        },
-                                        n
-                                    );
-                            }
-                            (o[t] = a), 0 == --i && e(o);
-                        } catch (c) {
-                            n(c);
-                        }
-                    }
-                    if (!t || "undefined" == typeof t.length) throw new TypeError("Promise.all accepts an array");
-                    var o = Array.prototype.slice.call(t);
-                    if (0 === o.length) return e([]);
-                    for (var i = o.length, a = 0; o.length > a; a++) r(a, o[a]);
-                });
-            }),
-            (n.resolve = function (t) {
-                return t && "object" == _typeof(t) && t.constructor === n
-                    ? t
-                    : new n(function (e) {
-                          e(t);
-                      });
-            }),
-            (n.reject = function (t) {
-                return new n(function (e, n) {
-                    n(t);
-                });
-            }),
-            (n.race = function (t) {
-                return new n(function (e, n) {
-                    for (var r = 0, o = t.length; o > r; r++) t[r].then(e, n);
-                });
-            }),
-            (n._immediateFn =
-                ("function" == typeof setImmediate &&
-                    function (t) {
-                        setImmediate(t);
-                    }) ||
-                function (t) {
-                    c(t, 0);
-                }),
-            (n._unhandledRejectionFn = function (t) {
-                void 0 !== console && console && void 0;
-            });
-        var u = (function () {
-            if ("undefined" != typeof self) return self;
-            if ("undefined" != typeof window) return window;
-            if ("undefined" != typeof global) return global;
-            throw Error("unable to locate global object");
-        })();
-        "Promise" in u ? u.Promise.prototype["finally"] || (u.Promise.prototype["finally"] = t) : (u.Promise = n);
-    }),
-    !(function (t) {
-        function e(t) {
-            if (("string" != typeof t && (t = String(t)), /[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(t))) throw new TypeError("Invalid character in header field name");
-            return t.toLowerCase();
-        }
-        function n(t) {
-            return "string" != typeof t && (t = String(t)), t;
-        }
-        function r(t) {
-            var e = {
-                next: function () {
-                    var e = t.shift();
-                    return { done: void 0 === e, value: e };
+
+        function icheckNext(err, msg) {
+            d.source.postMessage(
+                {
+                    name: "icheckcomplete",
+                    check_error: err,
+                    check_error_message: msg
                 },
-            };
-            return (
-                p.iterable &&
-                    (e[Symbol.iterator] = function () {
-                        return e;
-                    }),
-                e
+                d.origin
             );
         }
-        function o(t) {
-            (this.map = {}),
-                t instanceof o
-                    ? t.forEach(function (t, e) {
-                          this.append(e, t);
-                      }, this)
-                    : Array.isArray(t)
-                    ? t.forEach(function (t) {
-                          this.append(t[0], t[1]);
-                      }, this)
-                    : t &&
-                      Object.getOwnPropertyNames(t).forEach(function (e) {
-                          this.append(e, t[e]);
-                      }, this);
+        if (globalConfigData && globalConfigData.onintegritycheck) {
+            globalConfigData.onintegritycheck(d.data.hash, icheckNext);
+        } else {
+            icheckNext();
         }
-        function i(t) {
-            return t.bodyUsed ? Promise.reject(new TypeError("Already read")) : void (t.bodyUsed = !0);
+    };
+
+    message_handlers.charge_complete = function (d) {
+        readyToReceive = false;
+        if (globalConfigData && globalConfigData.chargecomplete) {
+            globalConfigData.chargecomplete(d.data.type, d.data.data);
         }
-        function a(t) {
-            return new Promise(function (e, n) {
-                (t.onload = function () {
-                    e(t.result);
-                }),
-                    (t.onerror = function () {
-                        n(t.error);
-                    });
-            });
+    };
+
+    message_handlers.charge_init = function (d) {
+        if (globalConfigData && globalConfigData.chargeinit) {
+            globalConfigData.chargeinit(d.data.type, d.data.timestamp);
         }
-        function s(t) {
-            var e = new FileReader(),
-                n = a(e);
-            return e.readAsArrayBuffer(t), n;
+    };
+
+    message_handlers.opop = message_handlers.vbvcomplete = function(d) {
+        readyToReceive = false;
+
+        if (afterCallbackRedirectTimeout) {
+            clearTimeout(afterCallbackRedirectTimeout);
         }
-        function c(t) {
-            if (t.slice) return t.slice(0);
-            var e = new Uint8Array(t.byteLength);
-            return e.set(new Uint8Array(t)), e.buffer;
-        }
-        function u() {
-            return (
-                (this.bodyUsed = !1),
-                (this._initBody = function (t) {
-                    if (((this._bodyInit = t), t))
-                        if ("string" == typeof t) this._bodyText = t;
-                        else if (p.blob && Blob.prototype.isPrototypeOf(t)) this._bodyBlob = t;
-                        else if (p.formData && FormData.prototype.isPrototypeOf(t)) this._bodyFormData = t;
-                        else if (p.searchParams && URLSearchParams.prototype.isPrototypeOf(t)) this._bodyText = t.toString();
-                        else if (p.arrayBuffer && p.blob && m(t)) (this._bodyArrayBuffer = c(t.buffer)), (this._bodyInit = new Blob([this._bodyArrayBuffer]));
-                        else {
-                            if (!p.arrayBuffer || (!ArrayBuffer.prototype.isPrototypeOf(t) && !y(t))) throw new Error("unsupported BodyInit type");
-                            this._bodyArrayBuffer = c(t);
-                        }
-                    else this._bodyText = "";
-                    this.headers.get("content-type") ||
-                        ("string" == typeof t
-                            ? this.headers.set("content-type", "text/plain;charset=UTF-8")
-                            : this._bodyBlob && this._bodyBlob.type
-                            ? this.headers.set("content-type", this._bodyBlob.type)
-                            : p.searchParams && URLSearchParams.prototype.isPrototypeOf(t) && this.headers.set("content-type", "application/x-www-form-urlencoded;charset=UTF-8"));
-                }),
-                p.blob &&
-                    ((this.blob = function () {
-                        var t = i(this);
-                        if (t) return t;
-                        if (this._bodyBlob) return Promise.resolve(this._bodyBlob);
-                        if (this._bodyArrayBuffer) return Promise.resolve(new Blob([this._bodyArrayBuffer]));
-                        if (this._bodyFormData) throw new Error("could not read FormData body as blob");
-                        return Promise.resolve(new Blob([this._bodyText]));
-                    }),
-                    (this.arrayBuffer = function () {
-                        return this._bodyArrayBuffer ? i(this) || Promise.resolve(this._bodyArrayBuffer) : this.blob().then(s);
-                    })),
-                (this.text = function () {
-                    var t,
-                        e,
-                        n,
-                        r = i(this);
-                    if (r) return r;
-                    if (this._bodyBlob) return (t = this._bodyBlob), (e = new FileReader()), (n = a(e)), e.readAsText(t), n;
-                    if (this._bodyArrayBuffer)
-                        return Promise.resolve(
-                            (function (t) {
-                                for (var e = new Uint8Array(t), n = new Array(e.length), r = 0; r < e.length; r++) n[r] = String.fromCharCode(e[r]);
-                                return n.join("");
-                            })(this._bodyArrayBuffer)
-                        );
-                    if (this._bodyFormData) throw new Error("could not read FormData body as text");
-                    return Promise.resolve(this._bodyText);
-                }),
-                p.formData &&
-                    (this.formData = function () {
-                        return this.text().then(d);
-                    }),
-                (this.json = function () {
-                    return this.text().then(JSON.parse);
-                }),
-                this
-            );
-        }
-        function l(t, e) {
-            var n,
-                r,
-                i = (e = e || {}).body;
-            if (t instanceof l) {
-                if (t.bodyUsed) throw new TypeError("Already read");
-                (this.url = t.url), (this.credentials = t.credentials), e.headers || (this.headers = new o(t.headers)), (this.method = t.method), (this.mode = t.mode), i || null == t._bodyInit || ((i = t._bodyInit), (t.bodyUsed = !0));
-            } else this.url = String(t);
+
+        if (globalConfigData && globalConfigData.callback)
+            globalConfigData.callback(d.data);
+
+        // delay by at least a second
+        // only redirect when we are not on a hosted page
+        afterCallbackRedirectTimeout = setTimeout(function () {
             if (
-                ((this.credentials = e.credentials || this.credentials || "omit"),
-                (!e.headers && this.headers) || (this.headers = new o(e.headers)),
-                (this.method = ((n = e.method || this.method || "GET"), (r = n.toUpperCase()), b.indexOf(r) > -1 ? r : n)),
-                (this.mode = e.mode || this.mode || null),
-                (this.referrer = null),
-                ("GET" === this.method || "HEAD" === this.method) && i)
-            )
-                throw new TypeError("Body not allowed for GET or HEAD requests");
-            this._initBody(i);
-        }
-        function d(t) {
-            var e = new FormData();
-            return (
-                t
-                    .trim()
-                    .split("&")
-                    .forEach(function (t) {
-                        if (t) {
-                            var n = t.split("="),
-                                r = n.shift().replace(/\+/g, " "),
-                                o = n.join("=").replace(/\+/g, " ");
-                            e.append(decodeURIComponent(r), decodeURIComponent(o));
-                        }
-                    }),
-                e
-            );
-        }
-        function f(t, e) {
-            e || (e = {}),
-                (this.type = "default"),
-                (this.status = void 0 === e.status ? 200 : e.status),
-                (this.ok = this.status >= 200 && this.status < 300),
-                (this.statusText = "statusText" in e ? e.statusText : "OK"),
-                (this.headers = new o(e.headers)),
-                (this.url = e.url || ""),
-                this._initBody(t);
-        }
-        if (!t.fetch) {
-            var p = {
-                searchParams: "URLSearchParams" in t,
-                iterable: "Symbol" in t && "iterator" in Symbol,
-                blob:
-                    "FileReader" in t &&
-                    "Blob" in t &&
-                    (function () {
-                        try {
-                            return new Blob(), !0;
-                        } catch (t) {
-                            return !1;
-                        }
-                    })(),
-                formData: "FormData" in t,
-                arrayBuffer: "ArrayBuffer" in t,
-            };
-            if (p.arrayBuffer)
-                var h = [
-                        "[object Int8Array]",
-                        "[object Uint8Array]",
-                        "[object Uint8ClampedArray]",
-                        "[object Int16Array]",
-                        "[object Uint16Array]",
-                        "[object Int32Array]",
-                        "[object Uint32Array]",
-                        "[object Float32Array]",
-                        "[object Float64Array]",
-                    ],
-                    m = function (t) {
-                        return t && DataView.prototype.isPrototypeOf(t);
-                    },
-                    y =
-                        ArrayBuffer.isView ||
-                        function (t) {
-                            return t && h.indexOf(Object.prototype.toString.call(t)) > -1;
-                        };
-            (o.prototype.append = function (t, r) {
-                (t = e(t)), (r = n(r));
-                var o = this.map[t];
-                this.map[t] = o ? o + "," + r : r;
-            }),
-                (o.prototype["delete"] = function (t) {
-                    delete this.map[e(t)];
-                }),
-                (o.prototype.get = function (t) {
-                    return (t = e(t)), this.has(t) ? this.map[t] : null;
-                }),
-                (o.prototype.has = function (t) {
-                    return this.map.hasOwnProperty(e(t));
-                }),
-                (o.prototype.set = function (t, r) {
-                    this.map[e(t)] = n(r);
-                }),
-                (o.prototype.forEach = function (t, e) {
-                    for (var n in this.map) this.map.hasOwnProperty(n) && t.call(e, this.map[n], n, this);
-                }),
-                (o.prototype.keys = function () {
-                    var t = [];
-                    return (
-                        this.forEach(function (e, n) {
-                            t.push(n);
-                        }),
-                        r(t)
-                    );
-                }),
-                (o.prototype.values = function () {
-                    var t = [];
-                    return (
-                        this.forEach(function (e) {
-                            t.push(e);
-                        }),
-                        r(t)
-                    );
-                }),
-                (o.prototype.entries = function () {
-                    var t = [];
-                    return (
-                        this.forEach(function (e, n) {
-                            t.push([n, e]);
-                        }),
-                        r(t)
-                    );
-                }),
-                p.iterable && (o.prototype[Symbol.iterator] = o.prototype.entries);
-            var b = ["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT"];
-            (l.prototype.clone = function () {
-                return new l(this, { body: this._bodyInit });
-            }),
-                u.call(l.prototype),
-                u.call(f.prototype),
-                (f.prototype.clone = function () {
-                    return new f(this._bodyInit, { status: this.status, statusText: this.statusText, headers: new o(this.headers), url: this.url });
-                }),
-                (f.error = function () {
-                    var t = new f(null, { status: 0, statusText: "" });
-                    return (t.type = "error"), t;
-                });
-            var _ = [301, 302, 303, 307, 308];
-            (f.redirect = function (t, e) {
-                if (-1 === _.indexOf(e)) throw new RangeError("Invalid status code");
-                return new f(null, { status: e, headers: { location: t } });
-            }),
-                (t.Headers = o),
-                (t.Request = l),
-                (t.Response = f),
-                (t.fetch = function (t, e) {
-                    return new Promise(function (n, r) {
-                        var i = new l(t, e),
-                            a = new XMLHttpRequest();
-                        (a.onload = function () {
-                            var t,
-                                e,
-                                r = {
-                                    status: a.status,
-                                    statusText: a.statusText,
-                                    headers:
-                                        ((t = a.getAllResponseHeaders() || ""),
-                                        (e = new o()),
-                                        t
-                                            .replace(/\r?\n[\t ]+/g, " ")
-                                            .split(/\r?\n/)
-                                            .forEach(function (t) {
-                                                var n = t.split(":"),
-                                                    r = n.shift().trim();
-                                                if (r) {
-                                                    var o = n.join(":").trim();
-                                                    e.append(r, o);
-                                                }
-                                            }),
-                                        e),
-                                };
-                            r.url = "responseURL" in a ? a.responseURL : r.headers.get("X-Request-URL");
-                            var i = "response" in a ? a.response : a.responseText;
-                            n(new f(i, r));
-                        }),
-                            (a.onerror = function () {
-                                r(new TypeError("Network request failed"));
-                            }),
-                            (a.ontimeout = function () {
-                                r(new TypeError("Network request failed"));
-                            }),
-                            a.open(i.method, i.url, !0),
-                            "include" === i.credentials ? (a.withCredentials = !0) : "omit" === i.credentials && (a.withCredentials = !1),
-                            "responseType" in a && p.blob && (a.responseType = "blob"),
-                            i.headers.forEach(function (t, e) {
-                                a.setRequestHeader(e, t);
-                            }),
-                            a.send(void 0 === i._bodyInit ? null : i._bodyInit);
-                    });
-                }),
-                (t.fetch.polyfill = !0);
-        }
-    })("undefined" != typeof self ? self : void 0),
-    (function (t) {
-        function e(t, e) {
-            (O = !1), t === !1 && d && d.onclose && d.onclose(e === !0), E();
-        }
-        function n(t, n) {
-            B = setTimeout(function () {
-                e();
-                try {
-                    t();
-                } catch (n) {}
-            }, n);
-        }
-        function r(t) {
-            var e = [];
-            for (var n in t)
-                if (t.hasOwnProperty(n)) {
-                    var r = t[n];
-                    (r = encodeURIComponent(r)), e.push(n + "=" + r);
+                !globalIsHostedPage &&
+                globalConfigData &&
+                globalConfigData.redirect_url &&
+                d.data.success
+            ) {
+                var method = +globalConfigData.redirect_post ? 'POST' : 'GET';
+
+                if (method === 'GET' && +globalConfigData.redirect_no_json) {
+                    window.location.href = globalConfigData.redirect_url;
+                    return;
                 }
-            return e.join("&");
-        }
-        function o(t, e) {
-            (T = function () {
-                var t = document.createElement("div"),
-                    e = document.createElement("div");
-                t.setAttribute("class", "spinner-container"), t.setAttribute("id", "rve_spinner_container_0999"), e.setAttribute("class", "spinner");
-                var n = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                n.setAttribute("width", "40px"), n.setAttribute("height", "40px"), n.setAttribute("viewBox", "0 0 60 60");
-                var r = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                (r.style.fill = "#f5a623"),
-                    (r.style.fillRule = "evenodd"),
-                    r.setAttribute(
-                        "d",
-                        "M59.972 26a37.616 37.616 0 0 0-.71-3.455 30.092 30.092 0 0 0-1.446-4.26 30.682 30.682 0 0 0-4.809-7.849 29.483 29.483 0 0 0-7.594-6.389A29.733 29.733 0 0 0 36.292.551C34.63.216 32.956.015 31.255.002a39.08 39.08 0 0 0-3.964.16 30.369 30.369 0 0 0-9.898 2.747 30.882 30.882 0 0 0-7.34 4.848A30.286 30.286 0 0 0 4.4 14.495C2.7 17.28 1.427 20.32.73 23.509c-.562 2.545-.83 5.17-.696 7.782.12 2.532.509 5.063 1.272 7.488a30.823 30.823 0 0 0 1.782 4.5 30.367 30.367 0 0 0 2.464 4.112 30.149 30.149 0 0 0 6.67 6.764 29.967 29.967 0 0 0 18.779 5.827 29.845 29.845 0 0 0 9.724-1.942 29.06 29.06 0 0 0 8.237-4.862c1.232-1.045 2.33-2.224 3.362-3.47 1.045-1.259 1.982-2.585 2.76-4.018a29.445 29.445 0 0 0 1.714-3.817c.24-.643.469-1.286.656-1.956.2-.71.348-1.446.482-2.17.201-1.138.281-2.317.174-3.469-.093.51-.174 1.005-.294 1.5a14.602 14.602 0 0 1-.55 1.688c-.428 1.165-.964 2.29-1.473 3.416a36.09 36.09 0 0 1-2.25 4.125 28.98 28.98 0 0 1-1.353 1.996c-.482.643-1.031 1.259-1.58 1.862a23.257 23.257 0 0 1-3.617 3.268 26.913 26.913 0 0 1-4.3 2.585c-3.026 1.473-6.335 2.357-9.683 2.652a27.72 27.72 0 0 1-10.22-1.018 27.424 27.424 0 0 1-8.72-4.393 27.441 27.441 0 0 1-6.455-6.939c-1.808-2.719-3.054-5.786-3.737-8.987a26.897 26.897 0 0 1-.402-2.532c-.08-.723-.147-1.46-.174-2.196a26.23 26.23 0 0 1 .281-4.581c.496-3.295 1.568-6.47 3.228-9.363a26.813 26.813 0 0 1 5.64-6.885 26.563 26.563 0 0 1 7.607-4.701 25.887 25.887 0 0 1 5.01-1.46 24.97 24.97 0 0 1 2.611-.362c.429-.04.844-.04 1.273-.08.174 0 .348.013.522.013 2.906-.053 5.826.322 8.599 1.192a25.15 25.15 0 0 1 8.237 4.42 25.798 25.798 0 0 1 6.295 7.475 27.988 27.988 0 0 1 2.934 7.795c.134.63.24 1.26.348 1.889a2.11 2.11 0 0 0 .91 1.433c1.045.696 2.505.228 3.014-.897.174-.389.228-.804.161-1.193z"
-                    ),
-                    n.appendChild(r),
-                    n.classList.add("svg-spinner"),
-                    e.appendChild(n),
-                    t.appendChild(e),
-                    document.body.appendChild(t);
-                var o = document.createElement("style");
-                o &&
-                    (o.appendChild(
-                        document.createTextNode(
-                            ".spinner-container{height:100%;width:100%;position:fixed;top:0;left:0;background-color:rgba(225,225,225,.95); z-index:9999999}.svg-spinner{-webkit-animation:spin 500ms infinite linear;animation:spin 500ms infinite linear}.spinner{margin-top:-20px; margin-left:-20px; position:fixed; top:50%; left:50%;}@-webkit-keyframes spin {from { -webkit-transform: rotate(0deg);}to { -webkit-transform: rotate(360deg); }}@keyframes spin{from {transform:rotate(0deg);}to {transform:rotate(360deg);}}"
-                        )
-                    ),
-                    document.getElementsByTagName("head")[0].appendChild(o));
-            }),
-                (k = document.createElement("iframe")),
-                k.setAttribute("style", "position:fixed;top:0;left:0;z-index:-1;border:none;opacity:0;pointer-events:none;width:100%;height:100%;"),
-                k.setAttribute("allowTransparency", "true"),
-                k.setAttribute("width", "100%"),
-                k.setAttribute("height", "100%"),
-                k.setAttribute("name", "checkout"),
-                e
-                    ? ((w = "loading"),
-                      (k.style.opacity = "0"),
-                      (k.style.pointerEvents = "none"),
-                      (k.style.zIndex = "-1"),
-                      (P = function () {
-                          (A = !0), (document.body.style.overflow = "hidden"), (k.style.opacity = "1"), (k.style.pointerEvents = ""), (k.style.zIndex = "2147483647");
-                      }),
-                      (E = function () {
-                          (A = !1), (k.style.opacity = "0"), (k.style.pointerEvents = "none"), (k.style.zIndex = "-1"), (document.body.style.overflow = ""), c();
-                      }))
-                    : ((document.body.style.overflow = ""), (k.style.opacity = "1"), (k.style.pointerEvents = ""), (k.style.zIndex = "2147483647")),
-                k.setAttribute("id", "flwpugpaidid"),
-                (k.src = "https://checkout.flutterwave.com/?"),
-                document.body && (document.querySelector("#flwpugpaidid") && document.querySelector("#flwpugpaidid").remove(), document.body.appendChild(k));
-        }
-        function i(t, e) {
-            var n = {};
-            return (
-                e.forEach(function (e) {
-                    var r = t.getAttribute("data-" + e);
-                    r && (n[e] = r);
-                }),
-                n
-            );
-        }
-        function a(t) {
-            for (var e = t.attributes, n = e.length, r = [], o = 0; o < n; o++) {
-                var i = e[o];
-                i.name.match(/^data-meta-/) && r.push({ metaname: i.name.replace("data-meta-", ""), metavalue: i.value });
+
+                var $form = document.createElement('form');
+                var $textarea = document.createElement('textarea');
+                var hideStyle = 'position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;';
+
+                $textarea.setAttribute('name', 'resp');
+                $textarea.setAttribute('hidden', 'hidden');
+                $textarea.setAttribute('readonly', 'readonly');
+                $textarea.style = hideStyle;
+                $textarea.value = JSON.stringify(d.data);
+
+                $form.setAttribute('method', method);
+                $form.setAttribute('action', globalConfigData.redirect_url);
+                $form.setAttribute('hidden', 'hidden');
+                $form.style = hideStyle;
+
+                $form.appendChild($textarea);
+                document.body.appendChild($form);
+
+                $form.submit();
             }
-            return (o = null), (n = null), r;
+        }, 1000); // end set timeout
+    }
+
+    message_handlers.closeiframe = function(d) {
+        closePopup(false, d.data.data.cancelled);
+        if (window.top && window.top !== self) {
+            window.top.postMessage({ name: 'closeiframe' }, '*');
         }
-        function s(e, o) {
-            (g = document.getElementById("flwpugpaidid")), e.loadtimeout && n(e.onloadtimeout, e.loadtimeout), (d = e);
-            var i = JSON.parse(JSON.stringify(e));
+    };
+
+    message_handlers.modalready = function(d) {
+        if (window.top && window.top !== self) {
+            window.top.postMessage({ name: 'modalready' }, '*');
+        }
+    };
+
+    // message_handlers.modalready = function(d) {
+    //     document.body.style.overflow = "hidden";
+    //     modaliframe.style.opacity = "1";
+    //     modaliframe.style.pointerEvents = "";
+    //     modaliframe.style.zIndex = "2147483647";
+    // };
+
+    w.addEventListener(
+        "message",
+        function(message_data) {
             if (
-                (delete i.callback,
-                delete i.onclose,
-                delete i.onpaymentinit,
-                delete i.onvalidateotpinit,
-                delete i.meta,
-                delete i.theme,
-                (i.init_url = encodeURIComponent(t.location.href)),
-                t.location.href.includes("https://api.ravepay.co/flwv3-pug/getpaidx/api/hosted_pay/"))
-            )
-                k.src = k.src + r(i);
-            else if (e.hosted_payment || 1 === _) k.src = k.src + r(i);
+                message_data &&
+                message_data.data &&
+                message_data.data.name &&
+                message_handlers[message_data.data.name]
+            ) {
+                message_handlers[message_data.data.name](message_data);
+            }
+        },
+        false
+    );
+
+    //document.addEventListener("DOMContentLoaded", function(event) {
+    function generateQueryString(obj) {
+        var str = [];
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                var v = obj[prop];
+                v = encodeURIComponent(v);
+                str.push(prop + "=" + v);
+            }
+        }
+        return str.join("&");
+    }
+
+    var showIframe;
+
+    function loadIframe (data, is_hide) {
+        // show the spinner
+        showSpinner = function () {
+            var spinnerContainer = document.createElement("div");
+            var spinner = document.createElement("div");
+            spinnerContainer.setAttribute("class", "spinner-container");
+            spinnerContainer.setAttribute("id", "rve_spinner_container_0999");
+            spinner.setAttribute("class", "spinner");
+            var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("width", "40px");
+            svg.setAttribute("height", "40px");
+            svg.setAttribute("viewBox", "0 0 60 60");
+            var path = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "path"
+            );
+            path.style.fill = "#f5a623";
+            path.style.fillRule = "evenodd";
+            path.setAttribute(
+                "d",
+                "M59.972 26a37.616 37.616 0 0 0-.71-3.455 30.092 30.092 0 0 0-1.446-4.26 30.682 30.682 0 0 0-4.809-7.849 29.483 29.483 0 0 0-7.594-6.389A29.733 29.733 0 0 0 36.292.551C34.63.216 32.956.015 31.255.002a39.08 39.08 0 0 0-3.964.16 30.369 30.369 0 0 0-9.898 2.747 30.882 30.882 0 0 0-7.34 4.848A30.286 30.286 0 0 0 4.4 14.495C2.7 17.28 1.427 20.32.73 23.509c-.562 2.545-.83 5.17-.696 7.782.12 2.532.509 5.063 1.272 7.488a30.823 30.823 0 0 0 1.782 4.5 30.367 30.367 0 0 0 2.464 4.112 30.149 30.149 0 0 0 6.67 6.764 29.967 29.967 0 0 0 18.779 5.827 29.845 29.845 0 0 0 9.724-1.942 29.06 29.06 0 0 0 8.237-4.862c1.232-1.045 2.33-2.224 3.362-3.47 1.045-1.259 1.982-2.585 2.76-4.018a29.445 29.445 0 0 0 1.714-3.817c.24-.643.469-1.286.656-1.956.2-.71.348-1.446.482-2.17.201-1.138.281-2.317.174-3.469-.093.51-.174 1.005-.294 1.5a14.602 14.602 0 0 1-.55 1.688c-.428 1.165-.964 2.29-1.473 3.416a36.09 36.09 0 0 1-2.25 4.125 28.98 28.98 0 0 1-1.353 1.996c-.482.643-1.031 1.259-1.58 1.862a23.257 23.257 0 0 1-3.617 3.268 26.913 26.913 0 0 1-4.3 2.585c-3.026 1.473-6.335 2.357-9.683 2.652a27.72 27.72 0 0 1-10.22-1.018 27.424 27.424 0 0 1-8.72-4.393 27.441 27.441 0 0 1-6.455-6.939c-1.808-2.719-3.054-5.786-3.737-8.987a26.897 26.897 0 0 1-.402-2.532c-.08-.723-.147-1.46-.174-2.196a26.23 26.23 0 0 1 .281-4.581c.496-3.295 1.568-6.47 3.228-9.363a26.813 26.813 0 0 1 5.64-6.885 26.563 26.563 0 0 1 7.607-4.701 25.887 25.887 0 0 1 5.01-1.46 24.97 24.97 0 0 1 2.611-.362c.429-.04.844-.04 1.273-.08.174 0 .348.013.522.013 2.906-.053 5.826.322 8.599 1.192a25.15 25.15 0 0 1 8.237 4.42 25.798 25.798 0 0 1 6.295 7.475 27.988 27.988 0 0 1 2.934 7.795c.134.63.24 1.26.348 1.889a2.11 2.11 0 0 0 .91 1.433c1.045.696 2.505.228 3.014-.897.174-.389.228-.804.161-1.193z"
+            );
+            svg.appendChild(path);
+            svg.classList.add("svg-spinner");
+            spinner.appendChild(svg);
+            spinnerContainer.appendChild(spinner);
+            document.body.appendChild(spinnerContainer);
+
+            var pageStyle = document.createElement("style");
+            if (pageStyle) {
+                pageStyle.appendChild(
+                    document.createTextNode(
+                        ".spinner-container{height:100%;width:100%;position:fixed;top:0;left:0;background-color:rgba(225,225,225,.95); z-index:9999999}.svg-spinner{-webkit-animation:spin 500ms infinite linear;animation:spin 500ms infinite linear}.spinner{margin-top:-20px; margin-left:-20px; position:fixed; top:50%; left:50%;}@-webkit-keyframes spin {from { -webkit-transform: rotate(0deg);}to { -webkit-transform: rotate(360deg); }}@keyframes spin{from {transform:rotate(0deg);}to {transform:rotate(360deg);}}"
+                    )
+                );
+                document.getElementsByTagName("head")[0].appendChild(pageStyle);
+            }
+        };
+
+        modalframesource = document.createElement('iframe');
+        modalframesource.setAttribute('style', 'position:fixed;top:0;left:0;z-index:-1;border:none;opacity:0;pointer-events:none;width:100%;height:100%;');
+        modalframesource.setAttribute('allowTransparency', 'true');
+        modalframesource.setAttribute("width", "100%");
+        modalframesource.setAttribute("height", "100%");
+        modalframesource.setAttribute('name', 'checkout');
+
+        if (!is_hide) {
+            // modalframesource.setAttribute('width', '100%');
+            // modalframesource.setAttribute('height', '100%');
+            document.body.style.overflow = "";
+            modalframesource.style.opacity = "1";
+            modalframesource.style.pointerEvents = "";
+            modalframesource.style.zIndex = "2147483647";
+        }
+        else {
+            loadState = 'loading';
+            // modalframesource.setAttribute('width', '0%');
+            // modalframesource.setAttribute('height', '0%');
+            modalframesource.style.opacity = "0";
+            modalframesource.style.pointerEvents = "none";
+            modalframesource.style.zIndex = "-1";
+
+            showIframe = function (){
+                iframeAlreadyShown = true;
+                // modalframesource.setAttribute('width', '100%');
+                // modalframesource.setAttribute('height', '100%');
+                document.body.style.overflow = "hidden";
+                modalframesource.style.opacity = "1";
+                modalframesource.style.pointerEvents = "";
+                modalframesource.style.zIndex = "2147483647";
+            }
+
+            hideIframe = function (){
+                iframeAlreadyShown = false;
+                modalframesource.style.opacity = "0";
+                modalframesource.style.pointerEvents = "none";
+                modalframesource.style.zIndex = "-1";
+                document.body.style.overflow = "";
+                initialize();
+            }
+        }
+
+        //loadState
+
+        modalframesource.setAttribute('id', 'flwpugpaidid');
+
+        modalframesource.src = 'https://ravemodal-dev.herokuapp.com/?'
+
+        if (document.body) {
+
+            // If iframe already exists on the page, remove it from the body
+            if (document.querySelector('#flwpugpaidid')) {
+                document.querySelector('#flwpugpaidid').remove()
+            }
+
+            document.body.appendChild(modalframesource);
+        }
+
+
+    }
+
+    function extractAttributes(element, attributes) {
+        var obj = {};
+        attributes.forEach(function(attrib) {
+            var aa = element.getAttribute("data-" + attrib);
+            if (aa) obj[attrib] = aa;
+        });
+        return obj;
+    }
+
+    function extractMetaInfo(element) {
+        var attributes = element.attributes;
+        var atrlen = attributes.length;
+        var metas = [];
+        for (var x = 0; x < atrlen; x++) {
+            var attrib = attributes[x];
+            if (attrib.name.match(/^data-meta-/)) {
+                metas.push({
+                    metaname: attrib.name.replace("data-meta-", ""),
+                    metavalue: attrib.value
+                });
+            }
+        }
+
+        //=== Handle sideffects\\
+        x = null;
+        atrlen = null;
+        //======================\\
+        return metas;
+    }
+
+    function addQueryToIframe(data, callback) {
+        modaliframe = document.getElementById("flwpugpaidid");
+
+        if (data.loadtimeout) {
+            handleLoadTimeout(data.onloadtimeout, data.loadtimeout);
+        }
+
+        globalConfigData = data;
+
+        //this inadvertently strips all functions, the inner stringify that is. Accidental genius maybe?
+        var _data = JSON.parse(JSON.stringify(data));
+
+        delete _data.callback; //callback is not required as a query string to pass
+        delete _data.onclose; //onclose is not required as a query string to pass
+        delete _data.onpaymentinit;
+        delete _data.onvalidateotpinit;
+        delete _data.meta;
+        delete _data.theme;
+        //delete _data.onintegritycheck;
+
+        _data.init_url = encodeURIComponent(window.location.href);
+
+
+        // console.log(readyToReceive);
+
+        if (window.location.href.includes('https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/hosted_pay/')) {
+            modalframesource.src = modalframesource.src + generateQueryString(_data);
+        }
+
+        else if (data.hosted_payment || globalIsHostedPage === 1) {
+            modalframesource.src = modalframesource.src + generateQueryString(_data);
+        }
+        else {
+
+            let win = window.frames.checkout;
+
+            let postmessagesource = 'https://ravemodal-dev.herokuapp.com';
+
+            if (!readyToReceive) {
+                modalframesource = document.createElement('iframe');
+                modalframesource.setAttribute('style', 'position:fixed;top:0;left:0;z-index:-1;border:none;opacity:0;pointer-events:none;width:100%;height:100%;');
+                modalframesource.setAttribute('allowTransparency', 'true');
+                modalframesource.setAttribute("width", "100%");
+                modalframesource.setAttribute("height", "100%");
+                modalframesource.setAttribute('name', 'checkout');
+                modalframesource.style.opacity = "1";
+                modalframesource.style.pointerEvents = "";
+                modalframesource.style.zIndex = "2147483647";
+                document.body.style.overflow = "hidden";
+
+
+                modalframesource.src = 'https://ravemodal-dev.herokuapp.com/?' + generateQueryString(_data);
+
+                // If iframe already exists on the page, remove it from the body
+                if (document.querySelector('#flwpugpaidid')) {
+                    document.querySelector('#flwpugpaidid').remove()
+                }
+
+                document.body.appendChild(modalframesource)
+            }
             else {
-                var a = t.frames.checkout;
-                O
-                    ? a.postMessage({ name: "config", configdata: r(i) }, "*")
-                    : ((k = document.createElement("iframe")),
-                      k.setAttribute("style", "position:fixed;top:0;left:0;z-index:-1;border:none;opacity:0;pointer-events:none;width:100%;height:100%;"),
-                      k.setAttribute("allowTransparency", "true"),
-                      k.setAttribute("width", "100%"),
-                      k.setAttribute("height", "100%"),
-                      k.setAttribute("name", "checkout"),
-                      (k.style.opacity = "1"),
-                      (k.style.pointerEvents = ""),
-                      (k.style.zIndex = "2147483647"),
-                      (document.body.style.overflow = "hidden"),
-                      (k.src = "https://checkout.flutterwave.com/?" + r(i)),
-                      document.querySelector("#flwpugpaidid") && document.querySelector("#flwpugpaidid").remove(),
-                      document.body.appendChild(k));
-            }
-        }
-        function c() {
-            if (I)
-                for (var e = 0; e < I; e++) {
-                    var n = R[e];
-                    if (n) {
-                        var r = {};
-                        (r = i(n, [
-                            "PBFPubKey",
-                            "txref",
-                            "amount",
-                            "customer_email",
-                            "customer_phone",
-                            "customer_lastname",
-                            "customer_firstname",
-                            "currency",
-                            "country",
-                            "customer_fullname",
-                            "callback",
-                            "onclose",
-                            "onvalidateotpinit",
-                            "onpaymentinit",
-                            "redirect_url",
-                            "pay_button_text",
-                            "custom_title",
-                            "custom_description",
-                            "custom_logo",
-                            "default_account",
-                            "payment_method",
-                            "exclude_banks",
-                            "settlement_token",
-                            "recurring_stop",
-                            "integrity_hash",
-                            "redirect_post",
-                            "redirect_no_json",
-                            "payment_page",
-                            "payment_plan",
-                            "campaign_id",
-                            "subaccounts_id",
-                            "subaccounts_transaction_charge_type",
-                            "subaccounts_transaction_split_ratio",
-                            "subaccounts_transaction_charge",
-                            "subaccounts",
-                            "payment_options",
-                            "disable_pwb",
-                            "hosted_payment",
-                            "mobilemoney_network",
-                        ])),
-                            (r.meta = a(n)),
-                            r.subaccounts && (r.subaccounts = JSON.parse(r.subaccounts)),
-                            r.subaccounts_id &&
-                                ((r.subaccounts = [
-                                    {
-                                        id: r.subaccounts_id,
-                                        transaction_split_ratio: r.subaccounts_transaction_split_ratio,
-                                        transaction_charge_type: r.subaccounts_transaction_charge_type,
-                                        transaction_charge: r.subaccounts_transaction_charge,
-                                    },
-                                ]),
-                                delete r.subaccounts_transaction_split_ratio,
-                                delete r.subaccounts_transaction_charge_type,
-                                delete r.subaccounts_transaction_charge,
-                                delete r.subaccounts_id);
-                        var s = document.createElement("button");
-                        (s.innerText = r.pay_button_text || "PAY NOW"),
-                            (n.innerText = ""),
-                            s.setAttribute(
-                                "style",
-                                "color:#fff;background-color:#0a2740;border-color:#142a3e;/*padding:10px;*/display:inline-block;padding:6px12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border:1pxsolidtransparent;border-radius:4px;"
-                            ),
-                            s.setAttribute("type", "button"),
-                            s.addEventListener("click", function (e) {
-                                t.FlutterwaveCheckout(r);
-                            }),
-                            n.appendChild(s);
-                    }
-                }
-            o(null, !0);
-        }
-        function u(t) {
-            var e = {},
-                n = {
-                    normalize_customer: function (t, e, n) {
-                        if (t.name) {
-                            var r = t.name + "",
-                                o = r.split(" ");
-                            o[0] && (n.customer_firstname = o[0]), o[1] && (n.customer_lastname = o.slice(1).join(" "));
-                        }
-                        return t.email && (n.customer_email = t.email), t.phone_number && (n.customer_phone = t.phone_number), !0;
+                win.postMessage(
+                    {
+                        name: "config",
+                        configdata: generateQueryString(_data),
                     },
-                    normalize_customizations: function (t, e, n) {
-                        return t.title && (n.custom_title = t.title), t.description && (n.custom_description = t.description), t.logo && (n.custom_logo = t.logo), t.action_text && (n.pay_button_text = t.action_text), !0;
-                    },
-                    normalize_meta: function (t, e, n) {
-                        var r = [];
-                        return (
-                            "object" === _typeof(t) &&
-                                Object.keys(t).map(function (e) {
-                                    r.push({ metaname: e, metavalue: t[e] });
-                                }),
-                            r.length && (n.meta = r),
-                            !0
-                        );
-                    },
-                },
-                r = {
-                    public_key: "PBFPubKey",
-                    tx_ref: "txref",
-                    amount: "amount",
-                    currency: "currency",
-                    country: "country",
-                    integrity_hash: "integrity_hash",
-                    payment_options: "payment_options",
-                    payment_plan: "payment_plan",
-                    payment_page: "payment_page",
-                    redirect_url: "redirect_url",
-                    customer: "normalize_customer",
-                    subaccounts: "subaccounts",
-                    meta: "normalize_meta",
-                    callback: "callback",
-                    onclose: "onclose",
-                    customizations: "normalize_customizations",
-                    theme: "theme",
-                    enforce_payment_options: "enforce_payment_options",
-                    force_inline_iframe: "force_inline_iframe",
-                };
-            return (
-                Object.keys(r).forEach(function (o) {
-                    var i = r[o];
-                    return "amount" === o
-                        ? void (e[i] = +t[o] === +t[o] ? +t[o] : -1)
-                        : "theme" === o
-                        ? void ("[object Object]" === Object.prototype.toString.call(t[o]) && (e[i] = t[o]))
-                        : "enforce_payment_options" === o || "force_inline_iframe" === o
-                        ? void ("undefined" != typeof t[o] && (e[i] = 1))
-                        : void (t[o] && (n[i] ? n[i](t[o], t, e) : (e[i] = t[o])));
-                }),
-                e
-            );
-        }
-        function l(t, e) {
-            var n = [];
-            e.customer_firstname && n.push(e.customer_firstname), e.customer_lastname && n.push(e.customer_lastname);
-            var r = { status: "failed", customer: { email: e.customer_email, name: n.join(" "), phone_number: e.customer_phone }, transaction_id: null, tx_ref: e.txref, flw_ref: null, currency: e.currency || "NGN", amount: e.amount },
-                o = t.tx || (t.data && t.data.tx);
-            return (
-                o &&
-                    ((r.status = o.status),
-                    (r.transaction_id = o.id),
-                    (r.flw_ref = o.flwRef),
-                    (r.amount = o.amount),
-                    (r.currency = o.currency),
-                    (r.customer = {
-                        name: (o.customer && o.customer.fullName) || o["customer.fullName"],
-                        email: (o.customer && o.customer.email) || o["customer.email"],
-                        phone_number: (o.customer && o.customer.phone) || o["customer.phone"],
-                    })),
-                r
-            );
-        }
-        var d,
-            f,
-            p,
-            h,
-            m,
-            y,
-            b,
-            _,
-            v,
-            g,
-            w = "none",
-            A = !1,
-            E = !1,
-            x = function () {},
-            T = null,
-            k = "",
-            j = "",
-            O = !1,
-            C = t;
-        y = e;
-        var S = {};
-        (S.cannotloadiframe = function (t) {
-            O = !1;
-            var e = JSON.parse(JSON.stringify(f));
-            document.location = k.src + r(e) || document.location;
-        }),
-            (S.readytorecieve = function (t) {
-                (O = !0), (j = t.origin), t.source.postMessage({ name: "updategotten", meta: p, subaccounts: h, theme: m, v3: !0 }, t.origin);
-            });
-        var B;
-        (S.allcontentloaded = function (t) {
-            function e(e, n) {
-                t.source.postMessage({ name: "icheckcomplete", check_error: e, check_error_message: n }, t.origin);
-            }
-            clearTimeout(B),
-                (w = "loaded"),
-                A || x(),
-                t.source.postMessage({ name: "clickreport", time: b }, t.origin),
-                T && document.getElementById("rve_spinner_container_0999") && document.body.removeChild(document.getElementById("rve_spinner_container_0999")),
-                d && d.onopen && d.onopen(),
-                d && d.onintegritycheck ? d.onintegritycheck(t.data.hash, e) : e();
-        }),
-            (S.charge_complete = function (t) {
-                (O = !1), d && d.chargecomplete && d.chargecomplete(t.data.type, t.data.data);
-            }),
-            (S.charge_init = function (t) {
-                d && d.chargeinit && d.chargeinit(t.data.type, t.data.timestamp);
-            }),
-            (S.opop = S.vbvcomplete = function (e) {
-                (O = !1),
-                    v && clearTimeout(v),
-                    d &&
-                        (v = setTimeout(function () {
-                            var n = d.redirect_url,
-                                r = l(e.data, d);
-                            if (n) {
-                                var o = n && ~n.indexOf("?"),
-                                    i = o ? "&" : "?",
-                                    a = encodeURIComponent(r && r.status),
-                                    s = encodeURIComponent(r && r.tx_ref),
-                                    c = encodeURIComponent(r && r.transaction_id);
-                                return void (t.location.href = parseRedirectUrl(n + i + "status=" + a + "&tx_ref=" + s + "&transaction_id=" + c));
-                            }
-                            "function" == typeof d.callback && d.callback(r);
-                        }));
-            }),
-            (S.closeiframe = function (t) {
-                e(!1, t.data.data.cancelled);
-            }),
-            C.addEventListener(
-                "message",
-                function (t) {
-                    t && t.data && t.data.name && S[t.data.name] && S[t.data.name](t);
-                },
-                !1
-            );
-        var P,
-            R = document.querySelectorAll(".flwpug_getpaid"),
-            I = R.length;
-        c(),
-            (t.parseRedirectUrl = function (e) {
-                if ("string" == typeof e) {
-                    var n = e.split("?"),
-                        r = _toArray(n),
-                        o = r[0],
-                        i = r.slice(1);
-                    if (0 === o.indexOf("#"))
-                        return t.location.href
-                            .split("#")[0]
-                            .concat(o)
-                            .concat(i.length > 0 ? ";".concat(i.join("&")) : "");
-                }
-                return e;
-            }),
-            t.addEventListener("beforeunload", function () {
-                v && clearTimeout(v);
-            }),
-            (t.FlutterwaveCheckout = function (t) {
-                if (
-                    ((t = t && "object" === _typeof(t) && "error" === String(t.status).toLowerCase() ? t : u(t)),
-                    (f = t),
-                    f &&
-                        !f.onclose &&
-                        (f.onclose = (function () {
-                            var t = document.location;
-                            return function () {
-                                document.location = t;
-                            };
-                        })()),
-                    (b = Date.now()),
-                    1 == t.hosted_payment && !t.is_hosted_page)
-                ) {
-                    var e = document.createElement("form");
-                    e.setAttribute("method", "POST"), e.setAttribute("action", "https://checkout.flutterwave.com/hosted/pay");
-                    for (var n in t)
-                        if ("meta" === n)
-                            t[n].forEach(function (t, r) {
-                                var o = document.createElement("input");
-                                o.setAttribute("type", "hidden"), o.setAttribute("name", n + "[" + r + "][metaname]"), o.setAttribute("value", t.metaname), e.appendChild(o);
-                                var o = document.createElement("input");
-                                o.setAttribute("type", "hidden"), o.setAttribute("name", n + "[" + r + "][metavalue]"), o.setAttribute("value", t.metavalue), e.appendChild(o);
-                            });
-                        else if ("theme" === n && "[object Object]" === Object.prototype.toString.call(t[n]))
-                            Object.keys(t[n]).forEach(function (r) {
-                                var o = document.createElement("input");
-                                o.setAttribute("type", "hidden"), o.setAttribute("name", n + "[" + r + "]"), o.setAttribute("value", t[n][r]), e.appendChild(o);
-                            });
-                        else if ("subaccounts" === n)
-                            t[n].forEach(function (t, r) {
-                                var o = document.createElement("input");
-                                if ((o.setAttribute("type", "hidden"), o.setAttribute("name", n + "[" + r + "][id]"), o.setAttribute("value", t.id), e.appendChild(o), t.transaction_charge_type)) {
-                                    var o = document.createElement("input");
-                                    o.setAttribute("type", "hidden"), o.setAttribute("name", n + "[" + r + "][transaction_charge_type]"), o.setAttribute("value", t.transaction_charge_type), e.appendChild(o);
-                                }
-                                if (t.transaction_charge) {
-                                    var o = document.createElement("input");
-                                    o.setAttribute("type", "hidden"), o.setAttribute("name", n + "[" + r + "][transaction_charge]"), o.setAttribute("value", t.transaction_charge), e.appendChild(o);
-                                }
-                                if (t.transaction_split_ratio) {
-                                    var o = document.createElement("input");
-                                    o.setAttribute("type", "hidden"), o.setAttribute("name", n + "[" + r + "][transaction_split_ratio]"), o.setAttribute("value", t.transaction_split_ratio), e.appendChild(o);
-                                }
-                            });
-                        else {
-                            if (!~["string", "number", "boolean"].indexOf(_typeof(t[n]))) continue;
-                            var r = document.createElement("input");
-                            r.setAttribute("type", "hidden"), r.setAttribute("name", n), r.setAttribute("value", t[n]), e.appendChild(r);
-                        }
-                    return document.body.appendChild(e), void e.submit();
-                }
-                return (
-                    (_ = t.is_hosted_page),
-                    delete t.is_hosted_page,
-                    (p = t.meta),
-                    (h = t.subaccounts),
-                    (m = t.theme),
-                    delete t.theme,
-                    s(t),
-                    "loaded" == w
-                        ? P()
-                        : (T(),
-                          (x = function () {
-                              P();
-                          })),
-                    { close: y.bind(null, !0, !1) }
+                    '*'
                 );
-            });
-    })(window);
+            }
+
+        }
+
+    }
+    var anchors = document.querySelectorAll(".flwpug_getpaid");
+    var anlen = anchors.length;
+
+    function initialize() {
+        if (anlen) {
+            for (var i = 0; i < anlen; i++) {
+                var ahref = anchors[i];
+                if (ahref) {
+                    var iframeData = {};
+                    iframeData = extractAttributes(ahref, [
+                        "PBFPubKey",
+                        "txref",
+                        "amount",
+                        "customer_email",
+                        "customer_phone",
+                        "customer_lastname",
+                        "customer_firstname",
+                        "currency",
+                        "country",
+                        "customer_fullname",
+                        "callback",
+                        "onclose",
+                        "onvalidateotpinit",
+                        "onpaymentinit",
+                        "redirect_url",
+                        "pay_button_text",
+                        "custom_title",
+                        "custom_description",
+                        "custom_logo",
+                        "custom_narration",
+                        "default_account",
+                        "payment_method",
+                        "exclude_banks",
+                        "settlement_token",
+                        "recurring_stop",
+                        "integrity_hash",
+                        "redirect_post",
+                        "redirect_no_json",
+                        "payment_page",
+                        "payment_plan",
+                        "campaign_id",
+                        "subaccounts_id",
+                        "subaccounts_transaction_charge_type",
+                        "subaccounts_transaction_split_ratio",
+                        "subaccounts_transaction_charge",
+                        "subaccounts",
+                        "payment_options",
+                        "disable_pwb",
+                        "hosted_payment",
+                        "include_discount_amount",
+                        "mobilemoney_network"
+                    ]);
+
+                    //globalMeta = extractMetaInfo(ahref);
+                    iframeData.meta = extractMetaInfo(ahref);
+
+                    if (iframeData.subaccounts) {
+                        iframeData.subaccounts = JSON.parse(iframeData.subaccounts);
+                    }
+
+                    if (iframeData.subaccounts_id) {
+                        iframeData.subaccounts = [{
+                            id: iframeData.subaccounts_id,
+                            transaction_split_ratio: iframeData.subaccounts_transaction_split_ratio,
+                            transaction_charge_type: iframeData.subaccounts_transaction_charge_type,
+                            transaction_charge: iframeData.subaccounts_transaction_charge,
+                        }]
+
+                        delete iframeData.subaccounts_transaction_split_ratio
+                        delete iframeData.subaccounts_transaction_charge_type
+                        delete iframeData.subaccounts_transaction_charge
+                        delete iframeData.subaccounts_id
+                    }
+
+                    var paybutton = document.createElement("button");
+                    paybutton.innerText = iframeData.pay_button_text || "PAY NOW";
+                    ahref.innerText = "";
+
+                    paybutton.setAttribute(
+                        "style",
+                        "color:#fff;background-color:#0a2740;border-color:#142a3e;/*padding:10px;*/display:inline-block;padding:6px12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border:1pxsolidtransparent;border-radius:4px;"
+                    );
+
+                    paybutton.setAttribute("type", "button");
+
+                    paybutton.addEventListener("click", function (e) {
+                        window.getpaidSetup(iframeData);
+                    });
+                    ahref.appendChild(paybutton);
+                }
+            }
+        }
+
+        // loadIframe(null, true);
+    }
+
+    initialize();
+
+    window.addEventListener('beforeunload', function () {
+        if (afterCallbackRedirectTimeout) {
+            clearTimeout(afterCallbackRedirectTimeout);
+        }
+
+        // if (readyToReceive !== false) {
+        //     var win = window.frames.checkout;
+        //     win && win.postMessage({ name: 'forceclose' }, '*');
+        // }
+    });
+
+    window.getpaidSetup = function(config) {
+
+        globalChargeData = config;
+
+        if (globalChargeData && !globalChargeData.onclose) {
+            globalChargeData.onclose = (function () {
+                var location = document.location;
+                return function () { document.location = location; }
+            }());
+        }
+
+        globalButtonClicked = Date.now();
+        if (config.hosted_payment == 1 && !config.is_hosted_page) {
+            var form = document.createElement("form");
+            form.setAttribute("method", "POST");
+            form.setAttribute(
+                "action",
+                "https://ravemodal-dev.herokuapp.com/hosted/pay"
+            );
+            console.log(config)
+            for (var c in config) {
+                if (c === "meta") {
+                    config[c].forEach(function(m, mi) {
+                        var i = document.createElement("input");
+                        i.setAttribute("type", "hidden");
+                        i.setAttribute("name", c + "[" + mi + "][metaname]");
+                        i.setAttribute("value", m.metaname);
+                        form.appendChild(i);
+                        var i = document.createElement("input");
+                        i.setAttribute("type", "hidden");
+                        i.setAttribute("name", c + "[" + mi + "][metavalue]");
+                        i.setAttribute("value", m.metavalue);
+                        form.appendChild(i);
+                    });
+                }
+                else if (c === 'theme' && Object.prototype.toString.call(config[c]) === '[object Object]') {
+                    Object.keys(config[c]).forEach(function (prop) {
+                        var i = document.createElement("input");
+                        i.setAttribute("type", "hidden");
+                        i.setAttribute("name", c + "[" + prop + "]");
+                        i.setAttribute("value", config[c][prop]);
+                        form.appendChild(i);
+                    });
+                }
+                else if (c === 'subaccounts') {
+                    config[c].forEach(function(m, mi) {
+                        var i = document.createElement("input");
+                        i.setAttribute("type", "hidden");
+                        i.setAttribute("name", c + "[" + mi + "][id]");
+                        i.setAttribute("value", m.id);
+                        form.appendChild(i);
+                        if (m.transaction_charge_type) {
+                            var i = document.createElement("input");
+                            i.setAttribute("type", "hidden");
+                            i.setAttribute("name", c + "[" + mi + "][transaction_charge_type]");
+                            i.setAttribute("value", m.transaction_charge_type);
+                            form.appendChild(i);
+                        }
+
+                        if (m.transaction_charge) {
+                            var i = document.createElement("input");
+                            i.setAttribute("type", "hidden");
+                            i.setAttribute("name", c + "[" + mi + "][transaction_charge]");
+                            i.setAttribute("value", m.transaction_charge);
+                            form.appendChild(i);
+                        }
+
+                        if (m.transaction_split_ratio) {
+                            var i = document.createElement("input");
+                            i.setAttribute("type", "hidden");
+                            i.setAttribute("name", c + "[" + mi + "][transaction_split_ratio]");
+                            i.setAttribute("value", m.transaction_split_ratio);
+                            form.appendChild(i);
+                        }
+
+                    });
+                }
+                else {
+                    if (
+                        !~["string", "number", "boolean"].indexOf(
+                            _typeof(config[c])
+                        )
+                    )
+                        continue;
+                    var i = document.createElement("input");
+                    i.setAttribute("type", "hidden");
+                    i.setAttribute("name", c);
+                    i.setAttribute("value", config[c]);
+                    form.appendChild(i);
+                }
+            }
+            document.body.appendChild(form);
+            form.submit();
+            return;
+        }
+
+        globalIsHostedPage = config.is_hosted_page;
+        delete config.is_hosted_page;
+        globalMeta = config.meta;
+        globalSubaccounts = config.subaccounts;
+        globalTheme = config.theme;
+        delete config.theme;
+
+        loadIframe(config, true);
+
+        addQueryToIframe(config);
+        if (loadState == "loaded") {
+            showIframe();
+        }
+        else {
+            showSpinner();
+            deferredShowIframe = function (){
+                showIframe();
+            }
+        }
+
+        return {
+            close: globalClosePopup.bind(null, true, false)
+        };
+    };
+    // Execute the showIframe function
+    // showIframe();
+
+})(window);
