@@ -219,13 +219,96 @@
 
                         <div id="chosen-payment-method-option">
                             <!-- card form view -->
-                            <div class="checkout__container__option__body__paymentfield animated fadeIn chosen-payment-option" id="card-method">
-        <div class="error-section">
-            <div class="error">
-                <p id="error-section-message">Service error. Please check the parameters passed.</p>
-            </div>
-        </div>
-    </div>
+                            <div class="checkout__container__option__body__paymentfield hide animated fadeIn chosen-payment-option" id="card-method">
+
+                                <div id="card-method-error"></div>
+
+                                <div id="card-method-inner">
+                                    <!-- form fields to enter card details -->
+                                    <div class="card-entry-state" id="paymentform">
+                                        <form class="" onsubmit="return false;">
+
+                                            <div class="noamount"></div>
+
+                                            <div class="form-control">
+                                                <input id="card-number" name="cardNumber" class="no-b-b-radius m-b-none" type="tel" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="26" required="">
+                                                <label for="card-number">Card Number</label>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-row__left">
+                                                    <div class="form-control">
+                                                        <input oninput="this.value = this.value.replace(/[^0-9 \/]/g, '')" id="expiration" name="expiration" class="no-b-r-radius" type="tel" inputmode="numeric" placeholder="MM / YY" maxlength="7" required="">
+                                                        <label for="expiration">valid till</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row__right">
+                                                    <div class="form-control">
+                                                        <div id="cvv_popover" class="popover animated fadeIn">
+                                                            <div class="popover__arrow"></div>
+                                                            <div class="popover__content">
+                                                                The CVV is a 3 digit security code located at the back of your card.
+                                                            </div>
+                                                        </div>
+
+                                                        <span id="cvv_what_text" class="cvv_what">What is this?</span>
+                                                        <input id="cvv" class="no-b-l-radius" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="cvv" type="password" inputmode="numeric" placeholder="123" maxlength="4" required="">
+                                                        <label for="cvv">CVV</label>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+
+                                            
+                                            <div class="checkbox ___remember-card-checkbox" id="remember-card" style="position:relative;margin-bottom:16px;">
+                                                <input type="checkbox" id="remember-me-check" class="checkbox__input" aria-described-by="remember-description">
+                                                <label for="remember-me-check" class="checkbox__label remember__label" id="checkbox-label">Remember this card next time</label>
+                                                <span class="checkbox__toggler" role="presentation"></span>
+
+                                                <span class="remember__description-icon" role="presentation" id="remember-description-icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                                        <path d="M12 22a10 10 0 110-20 10 10 0 010 20zm0-2a8 8 0 100-16 8 8 0 000 16zm0-9a1 1 0 011 1v4a1 1 0 01-2 0v-4a1 1 0 011-1zm0-4a1 1 0 110 2 1 1 0 010-2z" fill="#f5a623"></path>
+                                                    </svg>
+                                                </span>
+
+                                                <div id="remember-description" class="remember__description">
+                                                    <span class="remember__description-heading" role="heading">Why remember your card?</span>
+                                                    <ul class="remember__description-benefits" role="group">
+                                                        <li class="remember__description-benefit">You don't need to enter card details every time</li>
+                                                        <li class="remember__description-benefit">You can also use our <strong>*444#</strong> to recharge securely with the same card</li>
+                                                        <li class="remember__description-benefit">You still need to authenticate each transaction with your secure PIN</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <!-- input for mobile number for remember card -->
+
+                                            <div class="remember-card-details animated fadeIn" style="display: none;" id="remember-details">
+                                                <div class="form-control">
+                                                    <label for="save_phone_number">Phone Number</label>
+                                                    <input id="save_phone_number" name="savePhoneNumber" pattern="[+0-9]+" minlength="11" type="tel">
+                                                </div>
+
+                                                <div class="form-control">
+                                                    <input id="save_email" name="saveEmail" type="email">
+                                                    <label for="save_email">Email Address</label>
+                                                </div>
+                                            </div>
+                                            
+
+                                            <div class="form-control">
+                                                <button type="submit" id="paycard-btn" class="btn">
+                                                Pay
+                                                <span class="rave-payment-amount"></span>
+                                                <div class="btn__icon hide-xs">
+                                                    <svg height="19.76264" width="12.76264" xmlns="http://www.w3.org/2000/svg"><path d="m3.88131984 3.88131984 5 6-5 6" fill="none" stroke="#fbeed8" stroke-width="1.65"></path></svg>
+                                                </div>
+                                            </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
 
                             <!-- ussd form view -->
                             <div class="checkout__container__option__body__paymentfield hide animated fadeIn chosen-payment-option" id="ussd-method">
