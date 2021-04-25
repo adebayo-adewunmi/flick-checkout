@@ -677,11 +677,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         loadIframe(config, true);
 
         addQueryToIframe(config);
+
         if (loadState == "loaded") {
             showIframe();
         }
         else {
             showSpinner();
+
+            setTimeout(function(){
+                document.getElementById("rve_spinner_container_0999").style.display = "none";
+            }, 2000);
+
             deferredShowIframe = function (){
                 showIframe();
             }
