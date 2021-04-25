@@ -139,5 +139,8 @@ let Payment = {
 		document.getElementById("company-logo").src = customerLogo;
 		document.getElementById("payment-name").innerHTML = customerFirstname;
 		document.getElementById("payment-email").innerHTML = customerEmail;
+
+		document.getElementById("customer-account-pay-btn").innerHTML = "NGN"+paymentAmount;
+		document.getElementById("customer-paycard-btn").innerHTML = "NGN"+paymentAmount;
 	}
 }
