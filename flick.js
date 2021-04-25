@@ -108,7 +108,7 @@ let Payment = {
 	closePaymentSuccessMessage: function(){
 		location.reload();
 
-		window.location.reload();
+		parent.location.reload();
 	},
 
 	processPayment: function(){
