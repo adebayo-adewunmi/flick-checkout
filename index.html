@@ -57,16 +57,16 @@
                         <div class="flick-checkout-container-option-header">
                             <div class="flick-checkout-container-option-header-content">
                                 <div class="img-container">
-                                    <img src="logo-mrs.png">
+                                    <img src="logo-mrs.png" id="company-logo">
                                 </div>
 
                                 <div class="payment-price text-center">
-                                    <span style="font-weight: normal;">NGN</span> 
-                                    <span>1,000,000,000,000</span>
+                                    <span style="font-weight: normal;" id="payment-currency-code"></span> 
+                                    <span id="payment-amount"></span>
                                 </div> 
 
                                 <p style="margin: 0; font-size: 1.1rem; color: #fff; text-align: center; font-weight: normal; margin-top: 0.5rem;">Niger Delta Development Company Limited</p>
-                                <p style="margin: 0; font-size: 1.1rem; color: #fff; text-align: center;; font-weight: normal;">finance@bestaftechnologies.com</p>
+                                <p style="margin: 0; font-size: 1.1rem; color: #fff; text-align: center;; font-weight: normal;" id="payment-email">finance@bestaftechnologies.com</p>
 
                                                                
                             </div>
@@ -754,5 +754,6 @@
         </div>
 
         <script src="flick.js"></script>
+        <script>Payment.attachPaymentData();</script>
     </body>
 </html>

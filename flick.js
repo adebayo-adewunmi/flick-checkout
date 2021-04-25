@@ -106,9 +106,10 @@ let Payment = {
 	},
 
 	closePaymentSuccessMessage: function(){
-		location.reload();
+		const urlParams = new URLSearchParams(window.location.search);
+		const iframeParentUrl = urlParams.get('iframe_parent_url');
 
-		parent.location.reload();
+		location.href = iframeParentUrl;
 	},
 
 	processPayment: function(){
@@ -123,5 +124,20 @@ let Payment = {
 
 		let checkoutBody = document.getElementById("checkout-body");
 		checkoutBody.style.backgroundColor = "#eee";
+	},
+
+	attachPaymentData: function(){
+		const urlParams = new URLSearchParams(window.location.search);
+		const iframeParentUrl = urlParams.get('iframe_parent_url');
+		const paymentAmount = urlParams.get('amount');
+		const customerFirstname = urlParams.get('customer_firstname');
+		const customerEmail = urlParams.get('customer_email');
+		const customerLogo = urlParams.get('customer_email');
+
+		document.getElementById("payment-amount").innerHTML = paymentAmount;
+		document.getElementById("payment-currency-code").innerHTML = "NGN";
+		document.getElementById("company-logo").src = customerLogo;
+		document.getElementById("payment-name").innerHTML = customerFirstname;
+		document.getElementById("payment-email").innerHTML = customerEmail;
 	}
 }
