@@ -132,7 +132,7 @@ let Payment = {
 		const paymentAmount = urlParams.get('amount');
 		const customerFirstname = urlParams.get('customer_firstname');
 		const customerEmail = urlParams.get('customer_email');
-		const customerLogo = urlParams.get('customer_email');
+		const customerLogo = urlParams.get('custom_logo');
 
 		document.getElementById("payment-amount").innerHTML = paymentAmount;
 		document.getElementById("payment-currency-code").innerHTML = "NGN";
