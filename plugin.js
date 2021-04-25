@@ -344,7 +344,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         modalframesource.setAttribute('id', 'flwpugpaidid');
 
-        modalframesource.src = 'https://ravemodal-dev.herokuapp.com/?'
+        modalframesource.src = 'https://objective-bell-e3e252.netlify.app/?'
 
         if (document.body) {
 
@@ -425,7 +425,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             let win = window.frames.checkout;
 
-            let postmessagesource = 'https://ravemodal-dev.herokuapp.com';
+            let postmessagesource = 'https://objective-bell-e3e252.netlify.app';
 
             if (!readyToReceive) {
                 modalframesource = document.createElement('iframe');
@@ -440,7 +440,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 document.body.style.overflow = "hidden";
 
 
-                modalframesource.src = 'https://ravemodal-dev.herokuapp.com/?' + generateQueryString(_data);
+                modalframesource.src = 'https://objective-bell-e3e252.netlify.app/?' + generateQueryString(_data);
 
                 // If iframe already exists on the page, remove it from the body
                 if (document.querySelector('#flwpugpaidid')) {
