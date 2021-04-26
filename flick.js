@@ -101,15 +101,16 @@ let Payment = {
 		},5000)
 	},
 
-	goBackSelectUSSDBanks: function(){
-		document.getElementById("ussd-text-code-view").classList.add("hide");
-		document.getElementById("ussd-view").classList.remove("hide");
+	goBackSelectUSSDBanks: function(){		
 
 		let paymentField = document.getElementsByClassName("flick-checkout-container-option-body-paymentfield");
 
 		[].forEach.call(paymentField, function(el) {
 		    el.classList.add("hide");
 		});
+
+		document.getElementById("ussd-text-code-view").classList.add("hide");
+		document.getElementById("ussd-view").classList.remove("hide");
 	},
 
 	closePaymentSuccessMessage: function(){
