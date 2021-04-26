@@ -29,6 +29,13 @@ let Payment = {
 		setTimeout(function(){
 			document.getElementById("flick-loader").style.display = "none";
 		},2000);
+
+		if(paymentOption == "qr"){
+			setTimeout(function(){
+				document.getElementById("qr-view").classList.add("hide");
+				document.getElementById("qr-scan-code-view").classList.remove("hide");
+			},3000);
+		}
 	},
 
 	selectBank: function(e){

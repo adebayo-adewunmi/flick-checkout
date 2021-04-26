@@ -148,7 +148,7 @@
                             </div>
                             <!-- end -->
 
-                            <!-- qr view -->
+                            <!-- qr loader view -->
                             <div class="flick-checkout-container-option-body-paymentfield hide" id="qr-view">
 
                                 <div id="qr-method-error"></div>
@@ -165,6 +165,42 @@
                                         <p class="checkout__container__option__body__paymentfield__instructions text-center">Please wait...</p>
 
                                         <img class="spin checkout__container__option__body__paymentfield__innerspinner" src="qr-loader.svg" alt="">
+                                    </div>
+
+                                    <div id="qramountnotpresent" class="hide">
+                                        <div class="form-control">
+                                            <button type="button" id="payqr-btn" class="btn" onclick="Config.chargeQR()">
+                                                <!-- Pay
+                                                <span class="rave-payment-amount"></span> -->
+                                                Try Again
+                                                <div class="btn__icon hide-xs">
+                                                    <svg height="19.76264" width="12.76264" xmlns="http://www.w3.org/2000/svg"><path d="m3.88131984 3.88131984 5 6-5 6" fill="none" stroke="#fbeed8" stroke-width="1.65"></path></svg>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- end -->
+
+                            <!-- qr scan code view -->
+                            <div class="flick-checkout-container-option-body-paymentfield hide" id="qr-scan-code-view">
+
+                                <div id="qr-method-error"></div>
+
+                                <div id="qr-method-inner">
+
+                                    <div class="noamount"></div>
+
+                                    <div id="qramountpresent" class="center-loader instructions-loader">                                       
+
+                                        <p class="checkout__container__option__body__paymentfield__instructions show-instruction text-center">Scan the QR Code below</p>
+
+                                        <div style="text-align: center;">
+                                            <img src="qr-code.svg" alt="">
+                                        </div>
                                     </div>
 
                                     <div id="qramountnotpresent" class="hide">
